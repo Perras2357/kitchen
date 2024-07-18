@@ -15,7 +15,12 @@ class GetComponentController extends Controller
             $data_components = DB::table('component')
             ->join('kitchen_component', 'component.id_component', '=', 'kitchen_component.id_component')
             ->select('component.*', 'kitchen_component.*')
+            ->distinct()
             ->get();
+
+            $data_components = $data_components->unique(function ($item) {
+                return $item->name_component.$item->description.$item->price.$item->posittion_X.$item->posittion_Y.$item->posittion_Z;
+            });
 
             $components = array();
             foreach($data_components as $data_component)
